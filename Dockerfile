@@ -27,15 +27,15 @@ RUN pip install --no-cache-dir -i ${PIP_INDEX_URL} uv
 
 WORKDIR /app
 
-# 先复制依赖清单以利用构建缓存（README.md 是 hatchling 打包元数据必需）
+# 依赖清单和源码必须一起复制：uv sync 会对本项目做 editable 安装，需要 src/ 存在
 COPY pyproject.toml uv.lock README.md ./
+COPY src/ ./src/
 
 # pypiwin32/drissionpage 仅批量注册功能用到（需要 Windows GUI），容器内用不到，移除以瘦身
 RUN sed -i '/"pypiwin32>=223",/d; /"drissionpage/d' pyproject.toml \
     && uv sync --no-dev \
     && rm -rf /root/.cache
 
-COPY src/ ./src/
 COPY --from=frontend /build/src/qoder2api/static ./src/qoder2api/static
 
 RUN useradd -m -u 10001 appuser \
