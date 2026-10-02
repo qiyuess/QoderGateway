@@ -27,8 +27,8 @@ RUN pip install --no-cache-dir -i ${PIP_INDEX_URL} uv
 
 WORKDIR /app
 
-# 先复制依赖清单以利用构建缓存
-COPY pyproject.toml uv.lock ./
+# 先复制依赖清单以利用构建缓存（README.md 是 hatchling 打包元数据必需）
+COPY pyproject.toml uv.lock README.md ./
 
 # pypiwin32 是 Windows 专用依赖（仅批量注册功能用到，函数内懒加载），容器内移除
 RUN sed -i '/"pypiwin32>=223",/d' pyproject.toml && uv sync --no-dev
