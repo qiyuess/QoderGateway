@@ -3,7 +3,7 @@
 ARG NPM_REGISTRY=https://registry.npmjs.org
 FROM node:22-alpine AS frontend
 
-ARG NPM_REGISTRY
+ARG NPM_REGISTRY=https://registry.npmjs.org
 WORKDIR /build/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci --registry=${NPM_REGISTRY}
@@ -17,7 +17,7 @@ RUN npm run build
 ARG PIP_INDEX_URL=https://pypi.org/simple
 FROM python:3.12-slim AS runtime
 
-ARG PIP_INDEX_URL
+ARG PIP_INDEX_URL=https://pypi.org/simple
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     UV_LINK_MODE=copy \
